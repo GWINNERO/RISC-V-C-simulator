@@ -22,6 +22,19 @@ int progr[PROGRAM_SIZE] = {
     0x002081b3  // add x3 x1 x2
 };
 
+void r_type(uint32_t instr) {
+
+    int opcode = instr & 0x7F;
+    //int rd = uint32[11:7];
+    //int funct3 = uint32[14:12];
+    //int rs1 = uint32[19:15];
+    //int rs2 = uint32[24:20];
+    //int funct7 = uint32[31:25];
+
+    printf("Value: %" PRIu32 "\n", value);
+}
+
+
 int main() {
     printf("Hello RISC-V World!\n");
 
