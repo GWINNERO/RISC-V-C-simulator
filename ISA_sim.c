@@ -25,6 +25,7 @@ int progr[PROGRAM_SIZE] = {
 void r_type(uint32_t instr) {
 
     int opcode = instr & 0x7F;
+    print(opcode);
     //int rd = uint32[11:7];
     //int funct3 = uint32[14:12];
     //int rs1 = uint32[19:15];
