@@ -1,4 +1,4 @@
-# Define the compiler
+#Define the compiler
 CC = gcc
 
 # Compiler flags
@@ -20,4 +20,8 @@ $(OUTPUT): $(SRC)
 # Clean up build files
 clean:
 	rm -f $(OUTPUT)
+
+# Run the program
+run: all
+	./$(OUTPUT)
 
