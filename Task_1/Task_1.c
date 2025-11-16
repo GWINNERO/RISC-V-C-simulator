@@ -131,61 +131,66 @@ void execute_r_type(uint32_t instr) {
 }
 
 void execute_I_type(uint32_t instr) {
-    const uint32_t rd    = get_rd(instr);
-    const uint32_t rs1   = get_rs1(instr);
-    const uint32_t imm  = get_bits(instr, 31, 20);
+    const uint32_t rd     = get_rd(instr);
+    const uint32_t rs1    = get_rs1(instr);
+    const uint32_t imm    = get_bits(instr, 31, 20);
     const uint32_t funct3 = get_funct3(instr);
     const uint32_t funct7 = get_funct7(instr);
 
     const uint32_t a = regs[rs1];
-    const uint32_t imm[11:0] = imm;
     uint32_t res = 0;
 
-    switch (funct3)
-    {
-    case 0x0 : // ADDI:
-        res = a + imm;
-        break;
-    case 0x1: // SLLI:
-        switch (funct7)
-        {
-        case (imm[5:11] = 0x00) : // SLLI::
-            res = a << (imm[0:4] & 0x1F);
-            break;
-        default:
+    switch (funct3) {
+        case 0x0: { // ADDI
+            res = (uint32_t)((int32_t)a + (int32_t)imm);
             break;
         }
-        break;
-    case 0x2 : // SLTI:
-        res = ((int32_t)a < (int32_t)imm) ? 1u : 0u;
-        break;
-    case 0x3 : // SLTIU:
-        res = (a < imm) ? 1u : 0u;
-        break; 
-    case 0x4 : // XORI:
-        res = a ^ imm;
-        break;
-    case 0x5 : // SLRI:
-        switch (funct7)
-        {
-        case (imm[5:11] = 0x00) : // SRLI::
-            res = a >> (imm[0:4] & 0x1F);
-            break;
-        case (imm[5:11] = 0x20) : // SRAI::
-            res = (uint32_t)(((int32_t)a) >> (imm[0:4] & 0x1F));
-            break;
-        default:
+        case 0x1: { // SLLI
+            if (funct7 != 0x00) goto illegal;
+            res = a << (imm & 0x1F);
             break;
         }
-    case 0x6 : // ORI:
-        res = a | imm;
-        break;
-    case 0x7 : // ANDI:
-        res = a & imm;
-        break;
-    default:
-        break;
+        case 0x2: { // SLTI
+            res = ((int32_t)a < (int32_t)imm) ? 1u : 0u;
+            break;
+        }
+        case 0x3: { // SLTIU
+            res = (a < imm) ? 1u : 0u;
+            break;
+        }
+        case 0x4: { // XORI
+            res = a ^ imm;
+            break;
+        }
+        case 0x5: { // SRLI / SRAI
+            uint32_t imm_hi = get_bits(imm, 11, 5);
+            switch (imm_hi) {
+                case 0x00: res = a >> (imm & 0x1F); break;                          // SRLI
+                case 0x20: res = (uint32_t)(((int32_t)a) >> (imm & 0x1F)); break;   // SRAI
+                default:   goto illegal;
+            }
+            break;
+        }
+        case 0x6: { // ORI
+            res = a | imm;
+            break;
+        }
+        case 0x7: { // ANDI
+            res = a & imm;
+            break;
+        }
+        default:
+            goto illegal;
     }
+
+    if (rd) regs[rd] = res;   // keep x0 hardwired to 0
+    regs[0] = 0;
+    return;
+
+    illegal:
+        fprintf(stderr, "Illegal I-type encoding (funct7=0x%02X, funct3=0x%X)\n",
+                (unsigned)funct7, (unsigned)funct3);
+        regs[0] = 0;
 }
 void execute_S_type(uint32_t instr) {
     (void)instr;
