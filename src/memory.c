@@ -14,7 +14,7 @@ uint32_t load_file(const char *filename, uint32_t memory[]) {
     while (fread(&instruction, sizeof(uint32_t), 1, file) == 1) {
 
         // Check if we exceed memory size
-        if (count >= MAX_INSTRUCTIONS) {
+        if (count >= MAX_MEMORY) {
             printf("Error: Instruction memory overflow.\n");
             fclose(file);
             return (uint32_t)-1; // Use 0xFFFFFFFF (max uint32_t value) to indicate error

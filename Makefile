@@ -1,11 +1,12 @@
 #Define the compiler
+
 CC = gcc
 
 # Compiler flags
 CFLAGS = -Wall -g
 
 # Source files
-SRC = main.c src/memory.c src/r_instructions.c
+SRC = main.c src/memory.c src/r_instructions.c src/instructions.c
 
 # Output
 OUTPUT = program
@@ -23,5 +24,5 @@ clean:
 
 # Run the program
 run: all
-	./$(OUTPUT)
+	./$(OUTPUT) 
 
