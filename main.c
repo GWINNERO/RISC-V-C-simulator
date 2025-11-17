@@ -41,8 +41,8 @@ uint32_t get_register(uint32_t reg) {
 }
 
 bool execute_instruction(){
-    uint32_t memory_address = pc/4; 
-    printf("[%u] ", pc);
+    uint32_t memory_address = pc/4;
+    printf("[%3u] ", pc);
     pc+=4; //increase pc with 4
 
     uint32_t instruction = memory[memory_address];
@@ -50,7 +50,7 @@ bool execute_instruction(){
     // end program if ECALL met
     if(instruction == 0x73 )
     {
-        printf("ecall 10");
+        printf("ecall 10\n");
         return false;
     }
 
@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
 
     // Print registers
     // Retrieving values
-    for (int i = 0; i <= REG_COUNT; i++){
-        printf("Value in register x[%u]: %u\n", i, get_register(1));
+    for (int i = 0; i < REG_COUNT; i++){
+        printf("Value in register x[%2u]: %u\n", i, get_register(1));
     }
 
     
