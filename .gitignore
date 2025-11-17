@@ -30,6 +30,9 @@ program
 *.so.*
 *.dylib
 
+# VSCode
+.vscode/
+
 # Executables
 *.exe
 *.out
