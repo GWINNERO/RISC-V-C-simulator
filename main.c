@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "src/instructions.h"
 #include "src/memory.h"
-#include "memory.h"
 
 #define REG_COUNT 32
 
@@ -47,8 +46,8 @@ uint32_t get_register(uint32_t reg) {
 }
 
 // Test loading file
+/*
 int main(void) {
-    uint32_t instruction_count = load_file("test_files\\T1\\addlarge.bin", instruction_memory);
 
     if (instruction_count == (uint32_t)-1) {
         printf("Program load failed.\n");
@@ -63,38 +62,49 @@ int main(void) {
 
     return 0;
 }
+*/
 // End test loading file
 
 
-/*
 // Example of using the functions
 int main(int argc, char *argv[]) {
 
-    printf("Hello RISC-V World!\n");
+    printf("RISC-V 32 C simulator!\n");
+
 
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
+        fprintf(stderr, "Execute a binary file with riscv instructions!");
         return EXIT_FAILURE; // Exit if no file path was provided
     }
+
+    //uint32_t instruction_count = load_file("test_files\\T1\\addlarge.bin", instruction_memory);
+    uint32_t instruction_count = load_file(argv[1], instruction_memory);
+    if(instruction_count == 0xFFFFFFFF){
+        printf("Error from load_file() received");
+    }
+    
+
+    for (int i = 0; i <= instruction_count; i++) {
+        printf("0x%X\n", instruction_memory[i]);
+    }
+
 
     //uint32_t load_file(const char *filename, uint32_t memory[]);
     //load_file(filename, memory[]);
     
-    /*
-    execute_r_type(0x00FF00F3);
-    execute_r_type(0x10FF00F3);
+    //execute_r_type(0x00FF00F3);
+    //execute_r_type(0x10FF00F3);
 
     // Setting some register values
-    set_register(1, 10);
-    set_register(2, 20);
+    //set_register(1, 10);
+    //set_register(2, 20);
     
     // Attempting to set x[0], should fail
-    set_register(0, 100);
+    //set_register(0, 100);
     
     // Retrieving values
-    printf("Value in register x[1]: %u\n", get_register(1));
-    printf("Value in register x[2]: %u\n", get_register(2));
-    */
+    //printf("Value in register x[1]: %u\n", get_register(1));
 
-    // return 0;
-// }
+     return 0;
+  }

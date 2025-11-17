@@ -36,7 +36,7 @@ void add(uint32_t rd, uint32_t rs1, uint32_t rs2){
 }
 
 void execute_r_type(uint32_t instr) {
-    uint32_t opcode = instr & 0x7F;
+    //uint32_t opcode = instr & 0x7F;
     uint32_t rd     = (instr >> 7) & 0x1F;
     uint32_t funct3 = (instr >> 12) & 0x7;
     uint32_t rs1    = (instr >> 15) & 0x1F;

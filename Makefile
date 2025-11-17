@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -g
 
 # Source files
-SRC = ISA_sim.c
+SRC = main.c src/memory.c src/r_instructions.c
 
 # Output
 OUTPUT = program

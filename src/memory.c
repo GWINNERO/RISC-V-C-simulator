@@ -22,8 +22,10 @@ uint32_t load_file(const char *filename, uint32_t memory[]) {
 
         // Store word instruction into the memory array
         memory[count] = instruction;
+
         count++;
     }
+    printf("Opened the file %s containing %u instructions\n", filename, count);
 
     fclose(file);
     return count; // Return the number of words (32-bit instructions) loaded from the file
