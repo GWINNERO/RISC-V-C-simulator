@@ -4,13 +4,13 @@
 #include <stdlib.h>
 #include "src/instructions.h"
 #include "src/memory.h"
+#include "memory.h"
 
 #define REG_COUNT 32
 
+uint32_t instruction_memory[MAX_INSTRUCTIONS]; // Instruction memory
 
 uint32_t pc = 0; // Program counter
-
-uint32_t instruction_memory[0];
 
 uint32_t x[REG_COUNT]; // Array holding 32 registers
 
@@ -46,6 +46,27 @@ uint32_t get_register(uint32_t reg) {
     }
 }
 
+// Test loading file
+int main(void) {
+    uint32_t instruction_count = load_file("test_files\\T1\\addlarge.bin", instruction_memory);
+
+    if (instruction_count == (uint32_t)-1) {
+        printf("Program load failed.\n");
+        return (uint32_t)-1;
+    }
+
+    printf("Loaded %u instructions.\n", instruction_count);
+
+    for (uint32_t i = 0; i < instruction_count; i++) {
+        printf("instruction memory[%u] = 0x%08X\n", i, instruction_memory[i]);
+    }
+
+    return 0;
+}
+// End test loading file
+
+
+/*
 // Example of using the functions
 int main(int argc, char *argv[]) {
 
@@ -75,5 +96,5 @@ int main(int argc, char *argv[]) {
     printf("Value in register x[2]: %u\n", get_register(2));
     */
 
-    return 0;
-}
+    // return 0;
+// }
