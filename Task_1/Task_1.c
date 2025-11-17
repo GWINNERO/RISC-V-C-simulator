@@ -193,9 +193,46 @@ void execute_I_type(uint32_t instr) {
         regs[0] = 0;
 }
 void execute_S_type(uint32_t instr) {
-    (void)instr;
-    puts("S-type executor called");
-}
+    const uint32_t rd = get_rd(instr);
+    const uint32_t rs1 = get_rs1(instr);
+    const uint32_t rs2 = get_rs2(instr);
+    const uint32_t funct3 = get_funct3(instr);
+
+    // S-type imemdiate is split between bits 31-25 and 11-7
+    const uint32_t imm_31_25 = get_bits(instr, 31, 25);
+    const uint32_t imm_11_7  = get_bits(instr, 11, 7);
+
+    const uint32_t a = regs[rs1];
+    uint32_t res = 0;
+
+    switch (funct3) {
+    /*
+        case 0x0: { // Store byte
+            M[rs1 + imm][0:7] = regs[rs2] & 0xFF;
+            a[res1 + imm_31_25][0:7] = (regs[rs2] >> 8) & 0xFF;
+            break;}
+        case 0x1: { // Store half
+            M[rs1 + imm][0:15] = regs[rs2] & 0xFFFF;
+            break;}
+        case 0x2: { // Store word
+            M[rs1 + imm][0:31] = regs[rs2];
+            break;}
+         */   
+        default:
+            goto illegal;
+    }
+
+    if (rd) regs[rd] = res;   // keep x0 hardwired to 0
+    regs[0] = 0;
+    return;
+
+    illegal:
+        fprintf(stderr, "Illegal S-type encoding (funct3=0x%X)\n",
+                (unsigned)funct3);
+        regs[0] = 0;
+
+}   
+
 
 /* ---------- minimal stubs so it links ---------- */
 void execute_i_type(uint32_t x){ (void)x; puts("I-type stub"); }
