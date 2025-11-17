@@ -7,7 +7,8 @@
 
 #define REG_COUNT 32
 
-uint32_t instruction_memory[MAX_INSTRUCTIONS]; // Instruction memory
+uint32_t memory[MAX_INSTRUCTIONS]; // Instruction memory start at 0
+                                   // Stack memory start at 1 MB (262144)
 
 uint32_t pc = 0; // Program counter
 
@@ -57,7 +58,7 @@ int main(void) {
     printf("Loaded %u instructions.\n", instruction_count);
 
     for (uint32_t i = 0; i < instruction_count; i++) {
-        printf("instruction memory[%u] = 0x%08X\n", i, instruction_memory[i]);
+        printf("instruction memory[%u] = 0x%08X\n", i, memory[i]);
     }
 
     return 0;
@@ -79,14 +80,14 @@ int main(int argc, char *argv[]) {
     }
 
     //uint32_t instruction_count = load_file("test_files\\T1\\addlarge.bin", instruction_memory);
-    uint32_t instruction_count = load_file(argv[1], instruction_memory);
+    uint32_t instruction_count = load_file(argv[1], memory);
     if(instruction_count == 0xFFFFFFFF){
         printf("Error from load_file() received");
     }
     
 
     for (int i = 0; i <= instruction_count; i++) {
-        printf("0x%X\n", instruction_memory[i]);
+        printf("0x%X\n", memory[i]);
     }
 
 
