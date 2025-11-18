@@ -96,8 +96,7 @@ int main(int argc, char *argv[]) {
         printf("Value in register x[%2u]: %u\n", i, get_register(1));
     }
 
+    bin_dump_registers(x, REG_COUNT);
     
-    
-
     exit(0);      
 }
