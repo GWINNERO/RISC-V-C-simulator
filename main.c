@@ -17,7 +17,7 @@ uint32_t x[REG_COUNT]; // Array holding 32 registers
 uint32_t imm = 0; // Global immediate value
 
 
-bool running = true;
+// bool running = true;
                   
    
 
@@ -39,7 +39,7 @@ uint32_t get_register(uint32_t reg) {
         return 0; // Return 0 for invalid index
     }
 }
-
+/*
 bool execute_instruction(){
     uint32_t memory_address = pc/4;
     printf("[%3u] ", pc);
@@ -57,7 +57,7 @@ bool execute_instruction(){
     dispatch_type(instruction);
     return true;
 }
-
+*/
 
 // Example of using the functions
 int main(int argc, char *argv[]) {
@@ -83,11 +83,11 @@ int main(int argc, char *argv[]) {
 
 
 
-
+/*
     while(running){
         running = execute_instruction();
     }
-
+*/
 
 
     // Print registers
