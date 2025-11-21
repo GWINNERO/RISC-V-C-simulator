@@ -2,8 +2,10 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "src/instructions.h"
 #include "src/memory.h"
+
 
 #define REG_COUNT 32            // Register count
 
