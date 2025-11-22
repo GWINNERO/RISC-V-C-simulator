@@ -29,8 +29,25 @@ uint32_t load_file(const char *filename, uint32_t memory[]) {
 }
 
 void bin_dump_registers(const uint32_t register_address[], int REG_COUNT) {
+
+    // binary printing of registers to console
     for (uint32_t i = 0; i < REG_COUNT; i++) {
         print_binary(register_address[i]);
         printf("\n");
     }
+
+    // open results folder to write the registers into a .bin file
+    FILE *out = fopen("results/register_dump.bin", "wb");
+    if (!out) {
+        printf("error cound not execute\n");
+        return;
+    }
+
+    // write each register as a 32-bit value into .bin file
+    for (uint32_t i = 0; i < REG_COUNT; i++) {
+        fwrite(&register_address[i], sizeof(uint32_t), 1, out);
+    }
+
+    fclose(out);
+    printf("Register dump saved to results/register_dump.bin\n");
 }
