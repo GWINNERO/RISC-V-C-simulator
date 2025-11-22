@@ -35,6 +35,7 @@ void add(uint32_t rd, uint32_t rs1, uint32_t rs2){
     printf("Register %u has been set to %u\n", rd, rd_val);
 }
 
+/*
 void execute_r_type(uint32_t instr) {
     //uint32_t opcode = instr & 0x7F;
     uint32_t rd     = (instr >> 7) & 0x1F;
@@ -60,3 +61,4 @@ void execute_r_type(uint32_t instr) {
 
     }
 }
+*/
