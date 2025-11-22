@@ -63,7 +63,7 @@ inline uint32_t get_rs2   (uint32_t inst){ return get_bits(inst, 24, 20); }
 inline uint32_t get_funct7(uint32_t inst){ return get_bits(inst, 31, 25); }
 
 /* ---------- I-type executor (fixed) ---------- */
-void execute_i_type(uint32_t instr) {
+/*void execute_i_type(uint32_t instr) {
     const uint32_t ptr_rd     = get_rd(instr);
     const uint32_t ptr_rs1    = get_rs1(instr);
     const uint32_t imm    = get_bits(instr, 31, 20);
@@ -137,7 +137,7 @@ void execute_i_type(uint32_t instr) {
     illegal:
         fprintf(stderr, "Illegal I-type encoding (funct7=0x%02X, funct3=0x%X)\n",
                 (unsigned)funct7, (unsigned)funct3);
-}
+}*/
 /* ---------- S-type executor (fixed) ---------- */
 void execute_s_type(uint32_t instr) {
     const uint32_t ptr_rd = get_rd(instr);
