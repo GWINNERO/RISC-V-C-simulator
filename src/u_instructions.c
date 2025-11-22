@@ -22,12 +22,14 @@ void execute_u_type(uint32_t instr) {
         case 0x0:
             break;
         case 0b0110111: {
-            printf("(LUI): %u = %u\n", ptr_rd, rd);
             rd = imm;
+            printf("(LUI): (rd)%u = (imm)%u\n", ptr_rd, rd);
             break;
             }
         case 0b0010111: {
-            printf("(AUIPC) not implemented\n");
+            uint32_t pc = get_pc();
+            rd = imm + pc;
+            printf("(AUIPC) (x[%u])%u = %u(pc) + %u(imm)\n",ptr_rd, rd, pc, imm);
             break;
         }
         default: {

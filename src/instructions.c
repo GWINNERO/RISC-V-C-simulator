@@ -241,7 +241,7 @@ void execute_b_type(uint32_t x){
 
 void execute_sb_type(uint32_t x){ (void)x; puts("SB-type stub"); }
 //void execute_u_type(uint32_t x){ (void)x; puts("U-type stub"); }
-void execute_uj_type(uint32_t x){ (void)x; puts("UJ-type stub"); }
+//void execute_uj_type(uint32_t x){ (void)x; puts("UJ-type stub"); }
 
 /* ---------- demo main ---------- */
 /*

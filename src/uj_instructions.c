@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include "instructions.h"
 
-
-
 void jal(uint32_t instruction){
-    uint32_t rd = get_bits(instruction, 11, 7);
-    
+    uint32_t rd = get_rd(instruction);
     uint32_t imm20 = get_bits(instruction, 31, 31);
     uint32_t imm10_1 = get_bits(instruction, 30, 21);
     uint32_t imm11 = get_bits(instruction, 20, 20);
@@ -21,7 +18,17 @@ void jal(uint32_t instruction){
     set_register(rd, return_address);
     set_pc(get_pc() + imm);
 
-printf("JAL rd=x%u, imm=%d, return=0x%08X, new_pc=0x%08X\n",
+    printf("(JAL) rd=x%u, imm=%d, return=0x%08X, new_pc=0x%08X\n",
        rd, (int32_t)imm, return_address, get_pc());
+}
 
+void execute_uj_type(uint32_t instr){
+    uint32_t opcode = instr & 0x7F;
+    if(opcode == 0b1101111){
+        jal(instr);
+    }
+    else
+    {
+        printf("This UJ-type instruction is not implemented.\n");
+    }
 }
