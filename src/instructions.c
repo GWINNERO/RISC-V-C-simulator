@@ -66,52 +66,71 @@ void execute_r_type(uint32_t instr) {
     switch (funct3) {
         case 0x0: { // ADD / SUB
             switch (funct7) {
-                case 0x00: rd = (uint32_t)((int32_t)rs1 + (int32_t)rs2); printf("ADD "); break; // ADD
-                case 0x20: rd = (uint32_t)((int32_t)rs1 - (int32_t)rs2); printf("SUB "); break; // SUB
-                default:   goto illegal;
+                case 0x00: {
+                    rd = (uint32_t)((int32_t)rs1 + (int32_t)rs2);
+                    printf("(ADD): %u = %u + %u\n",rd,rs1,rs2);
+                    break;
+                } // ADD
+                case 0x20: {
+                    rd = (uint32_t)((int32_t)rs1 - (int32_t)rs2);
+                    printf("(SUB): %u = %u - %u\n",rd,rs1,rs2);
+                    break;
+                }
+                default: {
+                    goto illegal;
+                }
             } break;
         }
         case 0x1: { // SLL
             if (funct7 != 0x00) goto illegal;
             rd = rs1 << (rs2 & 0x1F);
-            printf("SLL ");
+            printf("(SLL): %u = %u << (%u & 0x1F)\n",rd,rs1,rs2);
             break;
         }
         case 0x2: { // SLT (signed)
             if (funct7 != 0x00) goto illegal;
             rd = ((int32_t)rs1 < (int32_t)rs2) ? 1u : 0u;
-            printf("SLT ");
+            printf("(SLT (signed)): %u = %u < %u\n",rd,rs1,rs2);
             break;
         }
         case 0x3: { // SLTU (unsigned)
             if (funct7 != 0x00) goto illegal;
             rd = (rs1 < rs2) ? 1u : 0u;
-            printf("SLTU ");
+            printf("(SLTU (unsigned)): %u = %u < %u\n",rd,rs1,rs2);
             break;
         }
         case 0x4: { // XOR
             if (funct7 != 0x00) goto illegal;
             rd = rs1 ^ rs2;
-            printf("XOR ");
+            printf("(XOR): %u = %u ^ %u\n",rd,rs1,rs2);
             break;
         }
         case 0x5: { // SRL / SRA
             switch (funct7) {
-                case 0x00: rd = rs1 >> (rs2 & 0x1F);printf("SRL "); break;                         // SRL
-                case 0x20: rd = (uint32_t)(((int32_t)rs1) >> (rs2 & 0x1F));printf("SRA "); break;  // SRA
-                default:   goto illegal;
+                case 0x00: { // SRL
+                    rd = rs1 >> (rs2 & 0x1F);
+                    printf("(SRL): %u = %u >> (%u & 0x1F)\n",rd,rs1,rs2);
+                    break;
+                }
+                case 0x20: { // SRA
+                    rd = (uint32_t)(((int32_t)rs1) >> (rs2 & 0x1F));
+                    printf("(SRA): %u = %u >> (%u & 0x1F)\n",rd,rs1,rs2);
+                    break; 
+                }
+                default: 
+                    goto illegal;
             } break;
         }
         case 0x6: { // OR
             if (funct7 != 0x00) goto illegal;
             rd = rs1 | rs2;
-            printf("OR ");
+            printf("(OR): %u = %u | %u\n",rd,rs1,rs2);
             break;
         }
         case 0x7: { // AND
             if (funct7 != 0x00) goto illegal;
             rd = rs1 & rs2;
-            printf("AND ");
+            printf("(AND): %u = %u & %u\n",rd,rs1,rs2);
             break;
         }
         default:
@@ -119,7 +138,6 @@ void execute_r_type(uint32_t instr) {
     }
 
     if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
-    printf("R type execute, set %u to %u\n", ptr_rd, rd);
     return;
 
     illegal:
@@ -141,40 +159,55 @@ void execute_i_type(uint32_t instr) {
     switch (funct3) {
         case 0x0: { // ADDI
             rd = (uint32_t)((int32_t)rs1 + (int32_t)imm);
+            printf("(ADDI): %u = %u + %u\n",rd,rs1,imm);
             break;
         }
         case 0x1: { // SLLI
             if (funct7 != 0x00) goto illegal;
             rd = rs1 << (imm & 0x1F);
+            printf("(SLLI): %u = %u << %u\n",rd,rs1,imm);
             break;
         }
         case 0x2: { // SLTI
             rd = ((int32_t)rs1 < (int32_t)imm) ? 1u : 0u;
+            printf("(SLTI): %u = %u < %u\n",rd,rs1,imm);
             break;
         }
         case 0x3: { // SLTIU
             rd = (rs1 < imm) ? 1u : 0u;
+            printf("(SLTIU): %u = %u < %u\n",rd,rs1,imm);
             break;
         }
         case 0x4: { // XORI
             rd = rs1 ^ imm;
+            printf("(XORI): %u = %u ^ %u\n",rd,rs1,imm);
             break;
         }
         case 0x5: { // SRLI / SRAI
             uint32_t imm_hi = get_bits(imm, 11, 5);
             switch (imm_hi) {
-                case 0x00: rd = rs1 >> (imm & 0x1F); break;                          // SRLI
-                case 0x20: rd = (uint32_t)(((int32_t)rs1) >> (imm & 0x1F)); break;   // SRAI
+                case 0x00: {
+                    rd = rs1 >> (imm & 0x1F);
+                    printf("(SRLI): %u = %u >> %u\n",rd,rs1,imm);
+                    break;                          // SRLI
+                }                                                                 //
+                case 0x20: {
+                    rd = (uint32_t)(((int32_t)rs1) >> (imm & 0x1F));
+                    printf("(SRAI): %u = %u >> %u\n",rd,rs1,imm);
+                    break;   // SRAI
+                }
                 default:   goto illegal;
             }
             break;
         }
         case 0x6: { // ORI
             rd = rs1 | imm;
+            printf("(ORI): %u = %u | %u\n",rd,rs1,imm);
             break;
         }
         case 0x7: { // ANDI
             rd = rs1 & imm;
+            printf("(ANDI): %u = %u & %u\n",rd,rs1,imm);
             break;
         }
         default:
@@ -182,7 +215,6 @@ void execute_i_type(uint32_t instr) {
     }
 
     if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
-    printf("I type execute, set %u to %u\n", ptr_rd, rd);
     return;
 
     illegal:
