@@ -129,7 +129,7 @@ void execute_r_type(uint32_t instr) {
                 (unsigned)funct7, (unsigned)funct3);
         regs[0] = 0;
 }
-
+/* ---------- I-type executor (fixed) ---------- */
 void execute_I_type(uint32_t instr) {
     const uint32_t rd     = get_rd(instr);
     const uint32_t rs1    = get_rs1(instr);
@@ -192,6 +192,7 @@ void execute_I_type(uint32_t instr) {
                 (unsigned)funct7, (unsigned)funct3);
         regs[0] = 0;
 }
+/* ---------- S-type executor (fixed) ---------- */
 void execute_S_type(uint32_t instr) {
     const uint32_t rd = get_rd(instr);
     const uint32_t rs1 = get_rs1(instr);
@@ -233,12 +234,62 @@ void execute_S_type(uint32_t instr) {
 
 }   
 
+void execute_B_type(uint32_t x){ 
+    const uint32_t rd     = get_rd(x);
+    const uint32_t rs1    = get_rs1(x);
+    const uint32_t rs2    = get_rs2(x);
+    const uint32_t funct3 = get_funct3(x);
+    const uint32_t funct7 = get_funct7(x);
+    const uint32_t imm_31_25    = get_bits(x, 31, 25)
+    const uint32_t  imm_11_7 = get_bits(x, 11,7);
+    
+    const uint32_t a = regs[rs1];
+    const uint32_t b = regs[rs2];
+    
+    switch (funct3)
+    {
+    case 0x0: // BEQ
+        if (regs[rs1] == regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
+    case 0x1: // BNE
+        if (regs[rs1] != regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
+    case 0x4: // BLT
+        if ((int32_t)regs[rs1] < (int32_t)regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
+    case 0x5: // BGE
+        if ((int32_t)regs[rs1] >= (int32_t)regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
+    case 0x6: // BLTU
+        if (regs[rs1] < regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
+    case 0x7: // BGEU
+        if (regs[rs1] >= regs[rs2]) {
+            // PC = PC + imm
+        }
+        break;
 
-/* ---------- minimal stubs so it links ---------- */
-void execute_i_type(uint32_t x){ (void)x; puts("I-type stub"); }
-void execute_s_type(uint32_t x){ (void)x; puts("S-type stub"); }
+    default:
+        break;
+    }
+    
+
+
+    (void)x; puts("B-type stub"); }
+
+
+
 void execute_sb_type(uint32_t x){ (void)x; puts("SB-type stub"); }
-void execute_u_type(uint32_t x){ (void)x; puts("U-type stub"); }
 void execute_uj_type(uint32_t x){ (void)x; puts("UJ-type stub"); }
 
 /* ---------- demo main ---------- */
