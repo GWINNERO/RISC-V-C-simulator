@@ -21,7 +21,13 @@ uint32_t imm = 0; // Global immediate value
 
 bool running = true;
                   
-   
+void set_pc(uint32_t value) {
+    pc = value;
+}
+
+uint32_t get_pc(){
+    return pc;
+}
 
 void set_register(uint32_t reg, uint32_t value) {
     if (reg == 0) {
