@@ -14,6 +14,8 @@ uint32_t get_register(uint32_t reg);
 void print_binary(uint32_t value);
 void set_pc(uint32_t value);
 uint32_t get_pc();
+uint32_t get_memory(uint32_t address);
+void set_memory(uint32_t address, uint32_t value);
 
 //void get_bits(uint32 x, int hi, int lo);
 

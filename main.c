@@ -48,6 +48,13 @@ uint32_t get_register(uint32_t reg) {
     }
 }
 
+uint32_t get_memory(uint32_t address){
+    return memory[address/4];
+}
+void set_memory(uint32_t address, uint32_t value){
+    memory[address/4] = value;
+}
+
 bool execute_instruction(){
     uint32_t memory_address = pc/4;
     printf("[%3u] ", pc);

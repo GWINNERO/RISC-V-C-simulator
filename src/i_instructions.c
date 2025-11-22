@@ -4,6 +4,7 @@
 
 /* ---------- I-type executor (fixed) ---------- */
 void execute_i_type(uint32_t instr) {
+    const uint32_t opcode     = instr & 0x7F;
     const uint32_t ptr_rd     = get_rd(instr);
     const uint32_t ptr_rs1    = get_rs1(instr);
     const uint32_t imm    = get_bits(instr, 31, 20);
@@ -25,7 +26,7 @@ void execute_i_type(uint32_t instr) {
                     // Calculate memory address
                     uint32_t effective_address = rs1 + imm;
                     // Load the byte from memory
-                    uint8_t rd = memory[effective_address];
+                    uint8_t rd = get_memory(effective_address);
 
                     // Sign-extend the byte to 32-bits
                     if (rd & 0x80) { // Check if the sign bit is set
