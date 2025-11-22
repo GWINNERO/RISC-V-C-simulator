@@ -50,162 +50,165 @@ static inline uint32_t get_rs2   (uint32_t inst){ return get_bits(inst, 24, 20);
 static inline uint32_t get_funct7(uint32_t inst){ return get_bits(inst, 31, 25); }
 
 /* simple global register file for demo; x0 must stay 0 */
-static uint32_t regs[32] = {0};
+//static uint32_t regs[32] = {0};
 
 /* ---------- R-type executor (fixed) ---------- */
-/*
 void execute_r_type(uint32_t instr) {
-    const uint32_t rd     = get_rd(instr);
-    const uint32_t rs1    = get_rs1(instr);
-    const uint32_t rs2    = get_rs2(instr);
+    const uint32_t ptr_rd     = get_rd(instr);
+    const uint32_t ptr_rs1    = get_rs1(instr);
+    const uint32_t ptr_rs2    = get_rs2(instr);
     const uint32_t funct3 = get_funct3(instr);
     const uint32_t funct7 = get_funct7(instr);
 
-    const uint32_t a = regs[rs1];
-    const uint32_t b = regs[rs2];
-    uint32_t res = 0;
-
+    const uint32_t rs1 = get_register(ptr_rs1); // a
+    const uint32_t rs2 = get_register(ptr_rs2); // b
+    uint32_t rd = 0;
     switch (funct3) {
         case 0x0: { // ADD / SUB
             switch (funct7) {
-                case 0x00: res = (uint32_t)((int32_t)a + (int32_t)b); break; // ADD
-                case 0x20: res = (uint32_t)((int32_t)a - (int32_t)b); break; // SUB
+                case 0x00: rd = (uint32_t)((int32_t)rs1 + (int32_t)rs2); printf("ADD "); break; // ADD
+                case 0x20: rd = (uint32_t)((int32_t)rs1 - (int32_t)rs2); printf("SUB "); break; // SUB
                 default:   goto illegal;
             } break;
         }
         case 0x1: { // SLL
             if (funct7 != 0x00) goto illegal;
-            res = a << (b & 0x1F);
+            rd = rs1 << (rs2 & 0x1F);
+            printf("SLL ");
             break;
         }
         case 0x2: { // SLT (signed)
             if (funct7 != 0x00) goto illegal;
-            res = ((int32_t)a < (int32_t)b) ? 1u : 0u;
+            rd = ((int32_t)rs1 < (int32_t)rs2) ? 1u : 0u;
+            printf("SLT ");
             break;
         }
         case 0x3: { // SLTU (unsigned)
             if (funct7 != 0x00) goto illegal;
-            res = (a < b) ? 1u : 0u;
+            rd = (rs1 < rs2) ? 1u : 0u;
+            printf("SLTU ");
             break;
         }
         case 0x4: { // XOR
             if (funct7 != 0x00) goto illegal;
-            res = a ^ b;
+            rd = rs1 ^ rs2;
+            printf("XOR ");
             break;
         }
         case 0x5: { // SRL / SRA
             switch (funct7) {
-                case 0x00: res = a >> (b & 0x1F); break;                         // SRL
-                case 0x20: res = (uint32_t)(((int32_t)a) >> (b & 0x1F)); break;  // SRA
+                case 0x00: rd = rs1 >> (rs2 & 0x1F);printf("SRL "); break;                         // SRL
+                case 0x20: rd = (uint32_t)(((int32_t)rs1) >> (rs2 & 0x1F));printf("SRA "); break;  // SRA
                 default:   goto illegal;
             } break;
         }
         case 0x6: { // OR
             if (funct7 != 0x00) goto illegal;
-            res = a | b;
+            rd = rs1 | rs2;
+            printf("OR ");
             break;
         }
         case 0x7: { // AND
             if (funct7 != 0x00) goto illegal;
-            res = a & b;
+            rd = rs1 & rs2;
+            printf("AND ");
             break;
         }
         default:
             goto illegal;
     }
 
-    if (rd) regs[rd] = res;   // keep x0 hardwired to 0
-    regs[0] = 0;
+    if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
+    printf("R type execute, set %u to %u\n", ptr_rd, rd);
     return;
 
     illegal:
         fprintf(stderr, "Illegal R-type encoding (funct7=0x%02X, funct3=0x%X)\n",
                 (unsigned)funct7, (unsigned)funct3);
-        regs[0] = 0;
 }
-*/
+
 /* ---------- I-type executor (fixed) ---------- */
 void execute_i_type(uint32_t instr) {
-    const uint32_t rd     = get_rd(instr);
-    const uint32_t rs1    = get_rs1(instr);
+    const uint32_t ptr_rd     = get_rd(instr);
+    const uint32_t ptr_rs1    = get_rs1(instr);
     const uint32_t imm    = get_bits(instr, 31, 20);
     const uint32_t funct3 = get_funct3(instr);
     const uint32_t funct7 = get_funct7(instr);
 
-    const uint32_t a = regs[rs1];
-    uint32_t res = 0;
+    const uint32_t rs1 = get_register(ptr_rs1); // a
+    uint32_t rd = 0;
 
     switch (funct3) {
         case 0x0: { // ADDI
-            res = (uint32_t)((int32_t)a + (int32_t)imm);
+            rd = (uint32_t)((int32_t)rs1 + (int32_t)imm);
             break;
         }
         case 0x1: { // SLLI
             if (funct7 != 0x00) goto illegal;
-            res = a << (imm & 0x1F);
+            rd = rs1 << (imm & 0x1F);
             break;
         }
         case 0x2: { // SLTI
-            res = ((int32_t)a < (int32_t)imm) ? 1u : 0u;
+            rd = ((int32_t)rs1 < (int32_t)imm) ? 1u : 0u;
             break;
         }
         case 0x3: { // SLTIU
-            res = (a < imm) ? 1u : 0u;
+            rd = (rs1 < imm) ? 1u : 0u;
             break;
         }
         case 0x4: { // XORI
-            res = a ^ imm;
+            rd = rs1 ^ imm;
             break;
         }
         case 0x5: { // SRLI / SRAI
             uint32_t imm_hi = get_bits(imm, 11, 5);
             switch (imm_hi) {
-                case 0x00: res = a >> (imm & 0x1F); break;                          // SRLI
-                case 0x20: res = (uint32_t)(((int32_t)a) >> (imm & 0x1F)); break;   // SRAI
+                case 0x00: rd = rs1 >> (imm & 0x1F); break;                          // SRLI
+                case 0x20: rd = (uint32_t)(((int32_t)rs1) >> (imm & 0x1F)); break;   // SRAI
                 default:   goto illegal;
             }
             break;
         }
         case 0x6: { // ORI
-            res = a | imm;
+            rd = rs1 | imm;
             break;
         }
         case 0x7: { // ANDI
-            res = a & imm;
+            rd = rs1 & imm;
             break;
         }
         default:
             goto illegal;
     }
 
-    if (rd) regs[rd] = res;   // keep x0 hardwired to 0
-    regs[0] = 0;
+    if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
+    printf("I type execute, set %u to %u\n", ptr_rd, rd);
     return;
 
     illegal:
         fprintf(stderr, "Illegal I-type encoding (funct7=0x%02X, funct3=0x%X)\n",
                 (unsigned)funct7, (unsigned)funct3);
-        regs[0] = 0;
 }
 /* ---------- S-type executor (fixed) ---------- */
 void execute_s_type(uint32_t instr) {
-    const uint32_t rd = get_rd(instr);
-    const uint32_t rs1 = get_rs1(instr);
-    const uint32_t rs2 = get_rs2(instr);
+    const uint32_t ptr_rd = get_rd(instr);
+    const uint32_t ptr_rs1 = get_rs1(instr);
+    const uint32_t ptr_rs2 = get_rs2(instr);
     const uint32_t funct3 = get_funct3(instr);
 
     // S-type imemdiate is split between bits 31-25 and 11-7
     const uint32_t imm_31_25 = get_bits(instr, 31, 25);
     const uint32_t imm_11_7  = get_bits(instr, 11, 7);
 
-    const uint32_t a = regs[rs1];
-    uint32_t res = 0;
+    const uint32_t rs1 = get_register(ptr_rs1);
+    const uint32_t rs2 = get_register(ptr_rs2);
+    uint32_t rd = 0;
 
     switch (funct3) {
     /*
         case 0x0: { // Store byte
             M[rs1 + imm][0:7] = regs[rs2] & 0xFF;
-            a[res1 + imm_31_25][0:7] = (regs[rs2] >> 8) & 0xFF;
+            a[rd1 + imm_31_25][0:7] = (regs[rs2] >> 8) & 0xFF;
             break;}
         case 0x1: { // Store half
             M[rs1 + imm][0:15] = regs[rs2] & 0xFFFF;
@@ -218,58 +221,58 @@ void execute_s_type(uint32_t instr) {
             goto illegal;
     }
 
-    if (rd) regs[rd] = res;   // keep x0 hardwired to 0
-    regs[0] = 0;
+    if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
+    printf("S type execute, set %u to %u\n", ptr_rd, rd);
     return;
 
     illegal:
         fprintf(stderr, "Illegal S-type encoding (funct3=0x%X)\n",
                 (unsigned)funct3);
-        regs[0] = 0;
 
 }   
 
 void execute_b_type(uint32_t x){ 
-    const uint32_t rd     = get_rd(x);
-    const uint32_t rs1    = get_rs1(x);
-    const uint32_t rs2    = get_rs2(x);
+    const uint32_t ptr_rd     = get_rd(x);
+    const uint32_t ptr_rs1    = get_rs1(x);
+    const uint32_t ptr_rs2    = get_rs2(x);
     const uint32_t funct3 = get_funct3(x);
     const uint32_t funct7 = get_funct7(x);
     const uint32_t imm_31_25    = get_bits(x, 31, 25);
     const uint32_t  imm_11_7 = get_bits(x, 11,7);
     
-    const uint32_t a = regs[rs1];
-    const uint32_t b = regs[rs2];
-    
+    const uint32_t rs1 = get_register(ptr_rs1);
+    const uint32_t rs2 = get_register(ptr_rs2);
+    uint32_t rd = 0;
+
     switch (funct3)
     {
     case 0x0: // BEQ
-        if (regs[rs1] == regs[rs2]) {
+        if (rs1 == rs2) {
             // PC = PC + imm
         }
         break;
     case 0x1: // BNE
-        if (regs[rs1] != regs[rs2]) {
+        if (rs1 != rs2) {
             // PC = PC + imm
         }
         break;
     case 0x4: // BLT
-        if ((int32_t)regs[rs1] < (int32_t)regs[rs2]) {
+        if ((int32_t)rs1 < (int32_t)rs2) {
             // PC = PC + imm
         }
         break;
     case 0x5: // BGE
-        if ((int32_t)regs[rs1] >= (int32_t)regs[rs2]) {
+        if ((int32_t)rs1 >= (int32_t)rs2) {
             // PC = PC + imm
         }
         break;
     case 0x6: // BLTU
-        if (regs[rs1] < regs[rs2]) {
+        if (rs1 < rs2) {
             // PC = PC + imm
         }
         break;
     case 0x7: // BGEU
-        if (regs[rs1] >= regs[rs2]) {
+        if (rs1 >= rs2) {
             // PC = PC + imm
         }
         break;
@@ -279,6 +282,9 @@ void execute_b_type(uint32_t x){
     }
     
 
+    if (ptr_rd) set_register(ptr_rd, rd);   // keep x0 hardwired to 0
+    printf("B type execute, set %u to %u\n", ptr_rd, rd);
+    return;
 
     (void)x; puts("B-type stub"); }
 
