@@ -11,4 +11,6 @@
 // Returns: number of 32-bit instructions loaded, or (uint32_t)-1 (max value) if an error occurs
 uint32_t load_file(const char *filename, uint32_t memory[]);
 
+void bin_dump_registers(const uint32_t register_address[], int REG_COUNT);
+
 #endif // MEMORY_H

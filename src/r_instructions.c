@@ -60,6 +60,3 @@ void execute_r_type(uint32_t instr) {
 
     }
 }
-
-
-

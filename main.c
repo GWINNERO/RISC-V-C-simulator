@@ -2,8 +2,10 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+
 #include "src/instructions.h"
 #include "src/memory.h"
+
 
 #define REG_COUNT 32            // Register count
 
@@ -17,7 +19,7 @@ uint32_t x[REG_COUNT]; // Array holding 32 registers
 uint32_t imm = 0; // Global immediate value
 
 
-bool running = true;
+// bool running = true;
                   
    
 
@@ -39,7 +41,7 @@ uint32_t get_register(uint32_t reg) {
         return 0; // Return 0 for invalid index
     }
 }
-
+/*
 bool execute_instruction(){
     uint32_t memory_address = pc/4;
     printf("[%3u] ", pc);
@@ -57,7 +59,7 @@ bool execute_instruction(){
     dispatch_type(instruction);
     return true;
 }
-
+*/
 
 // Example of using the functions
 int main(int argc, char *argv[]) {
@@ -83,11 +85,11 @@ int main(int argc, char *argv[]) {
 
 
 
-
+/*
     while(running){
         running = execute_instruction();
     }
-
+*/
 
 
     // Print registers
@@ -96,8 +98,7 @@ int main(int argc, char *argv[]) {
         printf("Value in register x[%2u]: %u\n", i, get_register(1));
     }
 
+    bin_dump_registers(x, REG_COUNT);
     
-    
-
     exit(0);      
 }
