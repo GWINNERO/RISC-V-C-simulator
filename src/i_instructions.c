@@ -42,7 +42,6 @@ void execute_i_type(uint32_t instr) {
         case 0x1: { // SLLI
             switch(opcode){
                 case 0x13: {
-            if (funct7 != 0x00) goto illegal;
             rd = rs1 << (imm & 0x1F);
             printf("(SLLI): %u = %u << %u\n",rd,rs1,imm);
             break;
@@ -97,6 +96,9 @@ void execute_i_type(uint32_t instr) {
     return;
 
     illegal:
-        fprintf(stderr, "Illegal I-type encoding (funct7=0x%02X, funct3=0x%X)\n",
-                (unsigned)funct7, (unsigned)funct3);
+        fprintf(stderr, "Illegal I-type encoding (opcode=0x%02X, funct3=0x%X)\n",
+                (unsigned)opcode, (unsigned)funct3);
+                  
+        }
+    }
 }
