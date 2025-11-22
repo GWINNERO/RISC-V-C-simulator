@@ -2,6 +2,15 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#endif
+
 
 #include "src/instructions.h"
 #include "src/memory.h"
@@ -51,6 +60,7 @@ uint32_t get_register(uint32_t reg) {
 uint32_t get_memory(uint32_t address){
     return memory[address/4];
 }
+
 void set_memory(uint32_t address, uint32_t value){
     memory[address/4] = value;
 }
@@ -113,6 +123,15 @@ int main(int argc, char *argv[]) {
 */
 
     bin_dump_registers(x, REG_COUNT);
-    
-    exit(0);      
+
+
+ /* Create the file */
+    int a = 5;
+    FILE *fp = fopen ("file.bin", "wb");
+    if (fp == NULL)
+      return -1;
+    fwrite (&a, sizeof (a), 1, fp);
+    fclose (fp);
+
+    exit(0);
 }

@@ -2,25 +2,22 @@
 #include <stdint.h>
 #include "instructions.h"
 
-uint32_t execute_sb_type(uint32_t instruction) {
+void execute_sb_type(uint32_t instruction) {
     uint32_t imm12   = (instruction >> 31) & 0x1;
     uint32_t imm10_5 = (instruction >> 25) & 0x3F;
     uint32_t imm4_1  = (instruction >> 8)  & 0xF;
     uint32_t imm11   = (instruction >> 7)  & 0x1;
     uint32_t imm = (imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | (imm4_1 << 1);
 
-    if (imm12)
+    if (imm12) {
         imm |= 0xFFFFE000; // sign extend
-
-    return (uint32_t)imm;
-
+    }
 
     uint32_t rs1 = (instruction >> 15) & 0x1F;
     uint32_t rs2 = (instruction >> 20) & 0x1F;
     uint32_t funct3 = (instruction >> 12) & 0x7;
 
-    uint32_t imm = decode_sb_imm(instruction);
-
+    
     switch (funct3) {
         case 0x0: beq(rs1, rs2, imm); break;
         case 0x1: bne(rs1, rs2, imm); break;

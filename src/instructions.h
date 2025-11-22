@@ -35,4 +35,12 @@ uint32_t get_rs1(uint32_t inst);
 uint32_t get_rs2(uint32_t inst);
 uint32_t get_funct7(uint32_t inst);
 
+void beq(uint32_t rs1, uint32_t rs2, uint32_t imm);
+void bne(uint32_t rs1, uint32_t rs2, uint32_t imm);
+void blt(uint32_t rs1, uint32_t rs2, uint32_t imm);
+void bge(uint32_t rs1, uint32_t rs2, uint32_t imm);
+void bltu(uint32_t rs1, uint32_t rs2, uint32_t imm);
+void bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm);
+
+
 #endif // INSTRUCTIONS_H
