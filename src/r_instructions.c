@@ -58,7 +58,6 @@ void execute_r_type(uint32_t instr) {
         default:
             printf("no such funct3. \n");
             break;
-
     }
 }
 */
