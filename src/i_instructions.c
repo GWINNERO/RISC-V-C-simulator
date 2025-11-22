@@ -9,7 +9,6 @@ void execute_i_type(uint32_t instr) {
     const uint32_t ptr_rs1    = get_rs1(instr);
     const uint32_t imm    = get_bits(instr, 31, 20);
     const uint32_t funct3 = get_funct3(instr);
-    const uint32_t funct7 = get_funct7(instr);
 
     const uint32_t rs1 = get_register(ptr_rs1); // a
     uint32_t rd = 0;
@@ -25,14 +24,11 @@ void execute_i_type(uint32_t instr) {
                 case 0x03: { // LB
                     // Calculate memory address
                     uint32_t effective_address = rs1 + imm;
-                    // Load the byte from memory
                     uint8_t rd = get_memory(effective_address);
-
                     // Sign-extend the byte to 32-bits
-                    if (rd & 0x80) { // Check if the sign bit is set
-                       rd = rd | 0xFFFFFF00; // Extend the sign
+                    if (rd & 0x80) { 
+                       rd = rd | 0xFFFFFF00;
                     }
-
                     // For debugging: print the result
                     printf("(LB): Loaded byte from address 0x%08X into x[%d] = 0x%08X\n",
                            effective_address, ptr_rd, rd);
@@ -42,9 +38,10 @@ void execute_i_type(uint32_t instr) {
                 default:
                     goto illegal;
             }
-                
         }
         case 0x1: { // SLLI
+            switch(opcode){
+                case 0x13: {
             if (funct7 != 0x00) goto illegal;
             rd = rs1 << (imm & 0x1F);
             printf("(SLLI): %u = %u << %u\n",rd,rs1,imm);
