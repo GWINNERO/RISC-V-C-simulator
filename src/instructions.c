@@ -2,6 +2,19 @@
 #include <stdint.h>
 #include "instructions.h"
 
+void print_binary(uint32_t value) {
+    char binary_str[33]; 
+    binary_str[32] = '\0'; 
+
+    for (int i = 31; i >= 0; i--) {
+        // set corresponding bit in string
+        binary_str[i] = (value & 1) ? '1' : '0';
+        value >>= 1;
+    }
+
+    printf("%s", binary_str);
+}
+
 // dispatcher
 void dispatch_type(uint32_t instruction) {
     uint32_t opcode = instruction & 0x7F; // last 7 bits
@@ -39,20 +52,21 @@ void dispatch_type(uint32_t instruction) {
 
 
 /* ----- bit helpers ----- */
-static inline uint32_t get_bits(uint32_t x, int hi, int lo) {
+inline uint32_t get_bits(uint32_t x, int hi, int lo) {
     int w = hi - lo + 1;
     return (x >> lo) & ((w == 32) ? 0xFFFFFFFFu : ((1u << w) - 1u));
 }
-static inline uint32_t get_rd    (uint32_t inst){ return get_bits(inst, 11, 7);  }
-static inline uint32_t get_funct3(uint32_t inst){ return get_bits(inst, 14, 12); }
-static inline uint32_t get_rs1   (uint32_t inst){ return get_bits(inst, 19, 15); }
-static inline uint32_t get_rs2   (uint32_t inst){ return get_bits(inst, 24, 20); }
-static inline uint32_t get_funct7(uint32_t inst){ return get_bits(inst, 31, 25); }
+inline uint32_t get_rd    (uint32_t inst){ return get_bits(inst, 11, 7);  }
+inline uint32_t get_funct3(uint32_t inst){ return get_bits(inst, 14, 12); }
+inline uint32_t get_rs1   (uint32_t inst){ return get_bits(inst, 19, 15); }
+inline uint32_t get_rs2   (uint32_t inst){ return get_bits(inst, 24, 20); }
+inline uint32_t get_funct7(uint32_t inst){ return get_bits(inst, 31, 25); }
 
 /* simple global register file for demo; x0 must stay 0 */
 //static uint32_t regs[32] = {0};
 
 /* ---------- R-type executor (fixed) ---------- */
+/*
 void execute_r_type(uint32_t instr) {
     const uint32_t ptr_rd     = get_rd(instr);
     const uint32_t ptr_rs1    = get_rs1(instr);
@@ -144,7 +158,7 @@ void execute_r_type(uint32_t instr) {
         fprintf(stderr, "Illegal R-type encoding (funct7=0x%02X, funct3=0x%X)\n",
                 (unsigned)funct7, (unsigned)funct3);
 }
-
+*/
 /* ---------- I-type executor (fixed) ---------- */
 void execute_i_type(uint32_t instr) {
     const uint32_t ptr_rd     = get_rd(instr);
@@ -323,7 +337,7 @@ void execute_b_type(uint32_t x){
 
 
 void execute_sb_type(uint32_t x){ (void)x; puts("SB-type stub"); }
-void execute_u_type(uint32_t x){ (void)x; puts("U-type stub"); }
+//void execute_u_type(uint32_t x){ (void)x; puts("U-type stub"); }
 void execute_uj_type(uint32_t x){ (void)x; puts("UJ-type stub"); }
 
 /* ---------- demo main ---------- */
