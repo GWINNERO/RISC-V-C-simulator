@@ -1,3 +1,5 @@
+program
+
 # Prerequisites
 *.d
 
@@ -27,6 +29,9 @@
 *.so
 *.so.*
 *.dylib
+
+# VSCode
+.vscode/
 
 # Executables
 *.exe
