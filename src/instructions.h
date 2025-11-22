@@ -12,6 +12,10 @@
 void set_register(uint32_t reg, uint32_t value);
 uint32_t get_register(uint32_t reg);
 void print_binary(uint32_t value);
+void set_pc(uint32_t value);
+uint32_t get_pc();
+
+//void get_bits(uint32 x, int hi, int lo);
 
 void dispatch_type(uint32_t instruction);
 
