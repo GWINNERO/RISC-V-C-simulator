@@ -16,10 +16,7 @@
 #include "src/memory.h"
 
 
-#define REG_COUNT 32            // Register count
-
-uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
-                                // Stack memory start at 1 MB (262144)
+#define REG_COUNT 32 // Register count
 
 uint32_t pc = 0; // Program counter
 
@@ -58,65 +55,18 @@ uint32_t get_register(uint32_t reg) {
 }
 
 uint32_t get_memory(uint32_t address){
-    // Return a 32-bit value where the requested address' byte is in the lowest byte.
-    // This allows callers that read bytes/halves using masks to work correctly
-    // even when the address is not word-aligned.
-    uint32_t word_index = address / 4;
-    uint32_t byte_offset = address % 4;
-    uint32_t word = memory[word_index];
-    // Shift the requested byte into lowest position. For LW callers that expect
-    // full word at aligned addresses, byte_offset will be 0 and the whole word is returned.
-    return (word >> (8 * byte_offset));
+    return memory[address/4];
 }
 
 void set_memory(uint32_t address, uint32_t value){
-    uint32_t word_index = address / 4;
-    uint32_t byte_offset = address % 4;
-
-    // Heuristic: caller passes only the relevant bytes for SB/SH (masked to 0xFF/0xFFFF).
-    // Detect intended store width by value range.
-    if (value <= 0xFFu) {
-        // store byte
-        uint32_t mask = ~(0xFFu << (8 * byte_offset));
-        memory[word_index] = (memory[word_index] & mask) | ((value & 0xFFu) << (8 * byte_offset));
-    } else if (value <= 0xFFFFu) {
-        // store halfword (may cross word boundary if unaligned)
-        if (byte_offset <= 2) {
-            uint32_t mask = ~(0xFFFFu << (8 * byte_offset));
-            memory[word_index] = (memory[word_index] & mask) | ((value & 0xFFFFu) << (8 * byte_offset));
-        } else {
-            // split across two words: write low byte here and high byte into next word
-            uint32_t low = value & 0xFFu;
-            uint32_t high = (value >> 8) & 0xFFu;
-            uint32_t mask = ~(0xFFu << (8 * byte_offset));
-            memory[word_index] = (memory[word_index] & mask) | (low << (8 * byte_offset));
-            // next word
-            uint32_t next_mask = ~0xFFu;
-            memory[word_index + 1] = (memory[word_index + 1] & next_mask) | high;
-        }
-    } else {
-        // store word (assume aligned in tests). If unaligned, split across two words.
-        if (byte_offset == 0) {
-            memory[word_index] = value;
-        } else {
-            // split into bytes across current and next word
-            for (int i = 0; i < 4; ++i) {
-                uint32_t b = (value >> (8 * i)) & 0xFFu;
-                uint32_t idx = word_index + ((byte_offset + i) / 4);
-                uint32_t off = (byte_offset + i) % 4;
-                uint32_t m = ~(0xFFu << (8 * off));
-                memory[idx] = (memory[idx] & m) | (b << (8 * off));
-            }
-        }
-    }
+    memory[address/4] = value;
 }
 
 bool execute_instruction(){
-    uint32_t memory_address = pc/4;
     printf("[%3u] ", pc);
+    uint32_t instruction = get_memory(pc);
     pc+=4; //increase pc with 4
 
-    uint32_t instruction = memory[memory_address];
     printf("[0x%08X] ", instruction);
     // end program if ECALL met
     if(instruction == 0x73 )
@@ -168,7 +118,8 @@ int main(int argc, char *argv[]) {
     }
 */
 
-    bin_dump_registers(x, REG_COUNT);
+    bin_dump_registers(x, REG_COUNT, argv[1]);
+
 
 
  /* Create the file */
