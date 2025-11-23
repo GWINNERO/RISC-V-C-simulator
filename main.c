@@ -55,7 +55,7 @@ uint32_t get_register(uint32_t reg) {
 }
 
 bool execute_instruction(){
-    printf("[%3u] ", pc);
+    printf("[0x%3X] ", pc);
     uint32_t instruction = get_memory(pc);
     pc+=4; //increase pc with 4
 
