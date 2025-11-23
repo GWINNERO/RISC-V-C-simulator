@@ -11,6 +11,7 @@ void execute_i_type(uint32_t instr) {
     const uint32_t imm    = (instr >> 20) & 0xFFF;
     const uint32_t funct3 = get_funct3(instr);
 
+    int32_t sign_imm = (imm & 0x800) ?(imm | 0xFFFFF000) :(imm & 0xFFF);
     const uint32_t rs1 = get_register(ptr_rs1); // a
     uint32_t rd = 0;
 
@@ -18,12 +19,9 @@ void execute_i_type(uint32_t instr) {
         case 0x0: { // ADDI
             switch(opcode){
                 case 0x13: {
-                    int32_t sign_imm = (imm & 0x800) ? 
-                              (imm | 0xFFFFF000) : // Sign-extend if the sign bit is set
-                              (imm & 0xFFF);      // No sign-extension needed
 
                     rd = (int32_t)(rs1 + sign_imm);
-                    printf("(ADDI): %X = %X + %d\n",rd,rs1,sign_imm);
+                    printf("(ADDI): [x%u]0x%X = [x%u]0x%X + %d\n",ptr_rd,rd,ptr_rs1,rs1,sign_imm);
                     break;
                 }
                 case 0x03: { // LB
@@ -89,8 +87,8 @@ void execute_i_type(uint32_t instr) {
         case 0x2: { // SLTI
             switch(opcode){
                 case 0x13:{
-                    rd = ((int32_t)rs1 < (int32_t)imm) ? 1u : 0u;
-                    printf("(SLTI): %u = %u < %u\n",rd,rs1,imm);
+                    rd = (int32_t)rs1 < sign_imm ? 1u : 0u;
+                    printf("(SLTI): [x%u]%u = [x%u]%d < %d\n",ptr_rd,rd,ptr_rs1,rs1,sign_imm);
                     break;
                 }
                 case 0x3: {
@@ -113,7 +111,7 @@ void execute_i_type(uint32_t instr) {
             switch(opcode){
                 case 0x13:{
                     rd = (rs1 < imm) ? 1u : 0u;
-                    printf("(SLTIU): %u = %u < %u\n",rd,rs1,imm);
+                    printf("(SLTIU): [x%u]%u = [x%u]%u < %u\n",ptr_rd,rd,ptr_rs1,rs1,imm);
                     break;
                 }
                 default:

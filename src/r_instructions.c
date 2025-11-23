@@ -29,12 +29,12 @@ void execute_r_type(uint32_t instr) {
             switch (funct7) {
                 case 0x00: {
                     rd = (uint32_t)((int32_t)rs1 + (int32_t)rs2);
-                    printf("(ADD): %u = %u + %u\n",rd,rs1,rs2);
+                    printf("(ADD): [x%u]0x%X = [x%u]0x%X + [x%u]0x%X\n",ptr_rd,rd,ptr_rs1,rs1,ptr_rs2, rs2);
                     break;
                 } // ADD
                 case 0x20: {
                     rd = (uint32_t)((int32_t)rs1 - (int32_t)rs2);
-                    printf("(SUB): %u = %u - %u\n",rd,rs1,rs2);
+                    printf("(SUB): [x%u]%d = [x%u]%d - [x%u]%d\n",ptr_rd,rd,ptr_rs1,rs1,ptr_rs2, rs2);
                     break;
                 }
                 default: {
@@ -51,13 +51,13 @@ void execute_r_type(uint32_t instr) {
         case 0x2: { // SLT (signed)
             if (funct7 != 0x00) goto illegal;
             rd = ((int32_t)rs1 < (int32_t)rs2) ? 1u : 0u;
-            printf("(SLT (signed)): %u = %u < %u\n",rd,rs1,rs2);
+            printf("(SLT): [x%u]%d = [x%u]%d < [x%u]%d\n",ptr_rd,rd,ptr_rs1,rs1,ptr_rs2, rs2);
             break;
         }
         case 0x3: { // SLTU (unsigned)
             if (funct7 != 0x00) goto illegal;
             rd = (rs1 < rs2) ? 1u : 0u;
-            printf("(SLTU (unsigned)): %u = %u < %u\n",rd,rs1,rs2);
+            printf("(SLTU): [x%u]%u = [x%u]%u < [x%u]%u\n",ptr_rd,rd,ptr_rs1,rs1,ptr_rs2, rs2);
             break;
         }
         case 0x4: { // XOR
