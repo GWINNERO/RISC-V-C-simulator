@@ -34,32 +34,56 @@ void execute_sb_type(uint32_t instruction) {
 
 
 void beq(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if (get_register(rs1) == get_register(rs2))
+    if (get_register(rs1) == get_register(rs2)) {
         set_pc(get_pc() + imm);
+        printf("BEQ taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    } else {
+        printf("BEQ not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    }
 }
 
 void bne(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if (get_register(rs1) != get_register(rs2))
+    if (get_register(rs1) != get_register(rs2)) {   
         set_pc(get_pc() + imm);
+        printf("BNE taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    } else {
+        printf("BNE not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    }
 }
 
 void blt(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if ((int32_t)get_register(rs1) < (int32_t)get_register(rs2))
+    if ((int32_t)get_register(rs1) < (int32_t)get_register(rs2)) {  
         set_pc(get_pc() + imm);
+        printf("BLT taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));
+    } else {
+        printf("BLT not taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));    
+    }
 }
 
-void bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if ((int32_t)get_register(rs1) >= (int32_t)get_register(rs2))
+    void bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+        if ((int32_t)get_register(rs1) >= (int32_t)get_register(rs2)) { 
         set_pc(get_pc() + imm);
+        printf("BGE taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));
+    } else {
+        printf("BGE not taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));
+    }
 }
 
 void bltu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if (get_register(rs1) < get_register(rs2))
+    if (get_register(rs1) < get_register(rs2)) {
         set_pc(get_pc() + imm);
+        printf("BLTU taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2)); 
+    } else {
+        printf("BLTU not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    }
 }
 
 void bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if (get_register(rs1) >= get_register(rs2))
+    if (get_register(rs1) >= get_register(rs2)) {
         set_pc(get_pc() + imm);
+        printf("BGEU taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    } else {
+        printf("BGEU not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
+    }
 }
 
