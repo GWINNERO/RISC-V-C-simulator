@@ -16,10 +16,7 @@
 #include "src/memory.h"
 
 
-#define REG_COUNT 32            // Register count
-
-uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
-                                // Stack memory start at 1 MB (262144)
+#define REG_COUNT 32 // Register count
 
 uint32_t pc = 0; // Program counter
 
@@ -55,14 +52,6 @@ uint32_t get_register(uint32_t reg) {
         printf("Error: Invalid register index %d.\n", reg);
         return 0; // Return 0 for invalid index
     }
-}
-
-uint32_t get_memory(uint32_t address){
-    return memory[address/4];
-}
-
-void set_memory(uint32_t address, uint32_t value){
-    memory[address/4] = value;
 }
 
 bool execute_instruction(){

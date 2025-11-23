@@ -1,6 +1,15 @@
 #include "memory.h"
 #include "instructions.h"
 
+
+uint32_t get_memory(uint32_t address){
+    return memory[address/4];
+}
+
+void set_memory(uint32_t address, uint32_t value){
+    memory[address/4] = value;
+}
+
 uint32_t load_file(const char *filename, uint32_t memory[]) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
@@ -51,3 +60,31 @@ void bin_dump_registers(const uint32_t register_address[], int REG_COUNT) {
     fclose(out);
     printf("Register dump saved to results/register_dump.bin\n");
 }
+
+// sign extender
+int32_t sign_extender(uint32_t value, int bits) {
+    int shift = 32 - bits;
+    return ((int32_t)(value << shift)) >> shift;
+}
+
+
+// Memory store helpers
+void store_word(uint32_t address, uint32_t value) {
+    memory[address / 4] = value;
+}
+
+void store_half(uint32_t address, uint32_t value) {
+    uint32_t index = address / 4;
+
+    // Only store lowest 16 bits, set to 32 bits
+    memory[index] = (uint32_t)(value & 0xFFFF);
+}
+
+void store_byte(uint32_t address, uint32_t value) {
+    uint32_t index = address / 4;
+
+    // Only store lowest 8 bits, set to 32 bits
+    memory[index] = (uint32_t)(value & 0xFF);
+}
+
+
