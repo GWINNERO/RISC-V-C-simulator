@@ -29,9 +29,7 @@ void dispatch_type(uint32_t instruction) {
             break;
 
         case 0x23: // S-type
-            printf("s-type: ");
             execute_s_type(instruction);
-            printf("s-type: ");
             break;
 
         case 0x63: // SB-type

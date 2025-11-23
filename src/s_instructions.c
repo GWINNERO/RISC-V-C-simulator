@@ -25,17 +25,14 @@ void execute_s_type(uint32_t instr) {
     switch (funct3) {
         case 0x0: { // Store byte (SB)
             sb(addr, (uint32_t)(value & 0xFF));
-            printf("(SB)\n");
             break;
         }
         case 0x1: { // Store half (SH)
             sh(addr, (uint32_t)(value & 0xFFFF));
-            printf("(SH)\n");
             break;
         }
         case 0x2: { // Store word (SW)
             sw(addr, value);
-            printf("(SW)\n");
             break;
         }
         default:
@@ -53,21 +50,47 @@ illegal:
 
 // store the lowest 8 bits of value into memory
 void sb(uint32_t addr, uint32_t value) {
-    uint32_t index = addr / 4;
-    memory[index] = (uint32_t)(value & 0xFF);  // keep only 8 bits
-    printf("SB mem[%u] = 0x%02X\n", index, memory[index]);
+       uint32_t word_index = addr >> 2;
+
+    write_byte(addr, value & 0xFF);
+
+    printf("(SB) memory[%u] = 0x%02X\n", addr, value & 0xFF);
+    printf("                            word[%02X] = 0x%08X\n",
+           word_index*4,
+           memory[word_index]);
 }
 
 // stores the lowest 16 bits of value into memory
 void sh(uint32_t addr, uint32_t value) {
-    uint32_t index = addr / 4;
-    memory[index] = (uint32_t)(value & 0xFFFF);  // keep 16 bits
-    printf("SH mem[%u] = 0x%04X\n", index, memory[index]);
-}
+      uint32_t i0 = addr >> 2;
+    uint32_t i1 = (addr + 1) >> 2;
+
+    write_byte(addr,     value & 0xFF);
+    write_byte(addr + 1, (value >> 8) & 0xFF);
+
+    printf("(SH) memory[%u:%u] = 0x%04X\n", addr, addr+1, value & 0xFFFF);
+    printf("                            word[%02X] = 0x%08X\n", i0*4, memory[i0]);
+
+    if (i1 != i0) {
+        printf("                            word[%02X] = 0x%08X\n", i1*4, memory[i1]);
+    }
+   }
 
 // stores all 32 bits of value into memory
 void sw(uint32_t addr, uint32_t value) {
-    uint32_t index = addr / 4;
-    memory[index] = value;
-    printf("SW mem[%u] = 0x%08X\n", index, memory[index]);
+     uint32_t i0 = addr >> 2;
+    uint32_t i1 = (addr + 3) >> 2;   // highest byte
+
+    write_byte(addr,     (value >> 0)  & 0xFF);
+    write_byte(addr + 1, (value >> 8)  & 0xFF);
+    write_byte(addr + 2, (value >> 16) & 0xFF);
+    write_byte(addr + 3, (value >> 24) & 0xFF);
+
+    printf("(SW) memory[%u:%u] = 0x%08X\n", addr, addr+3, value);
+    printf("                          word[%02X] = 0x%08X\n", i0*4, memory[i0]);
+
+    if (i1 != i0) {
+        printf("                            word[%02X] = 0x%08X\n", i1*4, memory[i1]);
+    }
 }
+

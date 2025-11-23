@@ -26,19 +26,21 @@ void execute_i_type(uint32_t instr) {
                 }
                 case 0x03: { // LB
                     // Calculate memory address
-                    uint32_t effective_address = rs1 + imm;
-                    uint32_t temp = effective_address % 4;
+                    uint32_t addr = rs1 + imm;
 
-                    uint32_t word = get_memory(effective_address-temp);
-                    uint32_t rd = (word >> (temp * 8)) & 0xFF;
+                    uint32_t b = read_byte(addr);
 
                     // Sign-extend the byte to 32-bits
-                    if (rd & 0x80) { 
-                       rd = rd | 0xFFFFFF00;
+                    if (b & 0x80) { 
+                       rd = b | 0xFFFFFF00;
                     }
+                    else{rd = (int32_t)b;}
+
                     // For debugging: print the result
-                    printf("(LB): Loaded byte from address 0x%08X into x[%d] = 0x%08X\n",
-                           effective_address, ptr_rd, rd);
+                    printf("(LB) Loaded byte from memory[%u] 0x%02X into x[%d] = (0x%08X)\n",
+                       addr, b, ptr_rd, rd);
+
+
                     break;
                 }
                 case 0x67: {
@@ -61,24 +63,23 @@ void execute_i_type(uint32_t instr) {
                         printf("(SLLI): %u = %u << %u\n",rd,rs1,imm);
                         break;
                       }
-                case 0x3: {
+                case 0x3: { // LH
                     // LH load half word
-                    // Calculate memory address
-                    uint32_t effective_address = rs1 + imm;
-                    uint32_t temp = effective_address % 4;
+                    uint32_t addr = rs1 + imm;
 
-                    uint32_t word = get_memory(effective_address-temp);
-                    uint32_t rd = (word >> (temp * 8)) & 0xFFFF;
+                    uint8_t b0 = read_byte(addr);
+                    uint8_t b1 = read_byte(addr + 1);
 
-                    // Sign-extend the byte to 32-bits
-                    if (rd & 0x8000) { 
-                       rd = rd | 0xFFFF0000;
-                    }
-                    // For debugging: print the result
-                    printf("(LH): Load half word from address 0x%08X into x[%d] = 0x%08X\n",
-                           effective_address, ptr_rd, rd);
+                    uint32_t half = (b1 << 8) | b0;
+
+                    rd = (half & 0x8000) ? (int32_t)(half | 0xFFFF0000)
+                                                 : (int32_t)half;
+
+                    printf("(LH) Load half word from memory[%u:%u] 0x%04X into x[%d] = 0x%08X\n",
+                           addr, addr+1, half, ptr_rd, rd);
+
                     break;
-                }
+                  }
                 default:
                     goto illegal;
             }
@@ -93,16 +94,23 @@ void execute_i_type(uint32_t instr) {
                 }
                 case 0x3: {
                 // LW load word
-                    // Calculate memory address
-                    uint32_t effective_address = rs1 + imm;
-                    uint32_t temp = effective_address % 4;
-                    if(temp) {printf("Ignores that offset is not multiple of 4. ");}
-                    uint32_t rd = get_memory(effective_address-temp);
+                    uint32_t addr = rs1 + imm;
 
-                    // For debugging: print the result
-                    printf("(LW): Loaded word from address 0x%08X into x[%d] = 0x%08X\n",
-                           effective_address, ptr_rd, rd);
-                    break; 
+                    uint8_t b0 = read_byte(addr);
+                    uint8_t b1 = read_byte(addr + 1);
+                    uint8_t b2 = read_byte(addr + 2);
+                    uint8_t b3 = read_byte(addr + 3);
+
+                    rd =
+                        ((uint32_t)b3 << 24) |
+                        ((uint32_t)b2 << 16) |
+                        ((uint32_t)b1 <<  8) |
+                        ((uint32_t)b0 <<  0);
+
+                    printf("(LW): Loaded word from memory[%u:%u] 0x%08X into x[%d] = 0x%08X\n",
+                           addr, addr+3, rd, ptr_rd, rd);
+
+                    break;
                 }
             }
             break;
@@ -127,17 +135,14 @@ void execute_i_type(uint32_t instr) {
                     break;
                 }
                 case 0x3: {
-                    // lbu
-                    // Calculate memory address
-                    uint32_t effective_address = rs1 + imm;
-                    uint32_t temp = effective_address % 4;
+                    // LBU 
+                    uint32_t addr = rs1 + imm;
 
-                    uint32_t word = get_memory(effective_address-temp);
-                    uint32_t rd = (word >> (temp * 8)) & 0xFF;
+                    uint8_t b = read_byte(addr);
+                    rd = b;
 
-                    // For debugging: print the result
-                    printf("(LBU): Loaded unsigned byte from address 0x%08X into x[%d] = 0x%08X\n",
-                           effective_address, ptr_rd, rd);
+                    printf("(LBU): Loaded unsigned byte from memory[%u] 0x%02X into x[%d] = 0x%08X\n",
+                           addr, b, ptr_rd, rd);
                     break;
                   }
                 default:
@@ -166,17 +171,15 @@ void execute_i_type(uint32_t instr) {
                  }
                 case 0x3: {
                     // LHU load half word unsigned
-                    // Calculate memory address
-                    uint32_t effective_address = rs1 + imm;
-                    uint32_t temp = effective_address % 4;
+                    uint32_t addr = rs1 + imm;
 
-                    uint32_t word = get_memory(effective_address-temp);
-                    uint32_t rd = (word >> (temp * 8)) & 0xFFFF;
+                    uint8_t b0 = read_byte(addr);
+                    uint8_t b1 = read_byte(addr + 1);
 
-                    // For debugging: print the result
-                    printf("(LHU): Loaded unsigned half word from address 0x%08X into x[%d] = 0x%08X\n",
-                           effective_address, ptr_rd, rd);
+                    rd = (b1 << 8) | b0;
 
+                    printf("(LHU) Loaded unsigned half word from memory[%u:%u] 0x%04X into x[%d] =  (0x%08X)\n",
+                           addr, addr+1, rd, ptr_rd, rd);
                     break;
                 }
                 default:

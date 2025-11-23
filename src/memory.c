@@ -12,6 +12,27 @@ void set_memory(uint32_t address, uint32_t value){
     memory[address/4] = value;
 }
 
+void write_byte(uint32_t addr, uint8_t value) {
+    uint32_t word_index = addr >> 2;
+    uint32_t byte_index = addr & 3;
+
+    uint32_t word = memory[word_index];
+
+    uint32_t mask = 0xFFu << (byte_index * 8);
+    word = (word & ~mask) | ((uint32_t)value << (byte_index * 8));
+
+    memory[word_index] = word;
+}
+
+uint32_t read_byte(uint32_t addr) {
+    uint32_t word_index = addr >> 2;
+    uint32_t byte_index = addr & 3;
+
+    uint32_t word = memory[word_index];
+    return (word >> (byte_index * 8)) & 0xFF;
+}
+
+
 uint32_t load_file(const char *filename, uint32_t memory[]) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
@@ -41,12 +62,12 @@ uint32_t load_file(const char *filename, uint32_t memory[]) {
 
 void bin_dump_registers(const uint32_t register_address[], int REG_COUNT, const char *input_filename) {
 
-    // binary printing of registers to console
+/*    // binary printing of registers to console
     for (uint32_t i = 0; i < REG_COUNT; i++) {
         print_binary(register_address[i]);
         printf("\n");
     }
-
+*/
     // Extract file name WITHOUT folders and WITHOUT ".bin"
     const char *base = strrchr(input_filename, '/');
     if (!base) base = strrchr(input_filename, '\\');

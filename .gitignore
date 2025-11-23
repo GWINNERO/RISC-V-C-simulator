@@ -1,6 +1,7 @@
 program
 file.bin
 results/*
+check
 
 # Prerequisites
 *.d

@@ -19,8 +19,6 @@ void execute_sb_type(uint32_t instruction) {
     int32_t sign_rs1 = (int32_t)rs1;
     int32_t sign_rs2 = (int32_t)rs2;
 
-//printf("SB-type decode: funct3=%u imm=0x%08X rs1=%u rs2=%u\n", funct3, imm, rs1, rs2);
-
     switch (funct3) {
         case 0x0: { // BEQ
             if (rs1 == rs2) {
@@ -88,32 +86,4 @@ void execute_sb_type(uint32_t instruction) {
     }
 
 }
-/*
-void bne(uint32_t rs1, uint32_t rChecking branchmany  ... PASSs2, uint32_t imm) {
-    if (get_register(rs1) != get_register(rs2)) {   
-        set_pc(get_pc() -4 + imm);
-        printf("BNE taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
-    } else {
-        printf("BNE not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
-    }
 
-void bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if ((int32_t)get_register(rs1) >= (int32_t)get_register(rs2)) { 
-        set_pc(get_pc() - 4 + imm);
-        printf("BGE taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));
-    } else {
-        printf("BGE not taken: x[%u]=%d, x[%u]=%d\n", rs1, (int32_t)get_register(rs1), rs2, (int32_t)get_register(rs2));
-    }
-}
-
-
-void bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
-    if (get_register(rs1) >= get_register(rs2)) {
-        set_pc(get_pc() - 4 + imm);
-        printf("BGEU taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
-    } else {
-        printf("BGEU not taken: x[%u]=%u, x[%u]=%u\n", rs1, get_register(rs1), rs2, get_register(rs2));
-    }
-}
-
-}*/

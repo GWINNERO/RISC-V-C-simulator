@@ -22,5 +22,7 @@ extern uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
 uint32_t get_memory(uint32_t address);
 void set_memory(uint32_t address, uint32_t value);
 
+void write_byte(uint32_t addr, uint8_t value);
+uint32_t read_byte(uint32_t addr);
 
 #endif // MEMORY_H

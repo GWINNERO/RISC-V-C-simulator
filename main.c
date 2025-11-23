@@ -55,7 +55,7 @@ uint32_t get_register(uint32_t reg) {
 }
 
 bool execute_instruction(){
-    printf("[0x%3X] ", pc);
+    printf("[0x%02X] ", pc);
     uint32_t instruction = get_memory(pc);
     pc+=4; //increase pc with 4
 
@@ -108,9 +108,17 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < REG_COUNT; i++){
         printf("Value in register x[%2u]: %u\n", i, get_register(1));
     }
+
+    for (uint32_t i = 0; i < REG_COUNT; i++){
+        print_binary(get_register(i));
+        printf("\n");
+    }
+
 */
 
+
     bin_dump_registers(x, REG_COUNT, argv[1]);
+
 
 
 
