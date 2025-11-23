@@ -6,7 +6,8 @@ CC = gcc
 CFLAGS = -Wall -g
 
 # Source files
-SRC = main.c src/memory.c src/r_instructions.c src/u_instructions.c src/instructions.c src/uj_instructions.c src/i_instructions.c
+SRC = main.c src/memory.c src/*instructions.c 
+#src/u_instructions.c src/instructions.c src/uj_instructions.c src/i_instructions.c
 
 # Output
 OUTPUT = program
