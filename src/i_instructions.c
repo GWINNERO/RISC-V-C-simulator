@@ -8,7 +8,7 @@ void execute_i_type(uint32_t instr) {
     const uint32_t opcode     = instr & 0x7F;
     const uint32_t ptr_rd     = get_rd(instr);
     const uint32_t ptr_rs1    = get_rs1(instr);
-    const uint32_t imm    = get_bits(instr, 31, 20);
+    const uint32_t imm    = (instr >> 20) & 0xFFF;
     const uint32_t funct3 = get_funct3(instr);
 
     const uint32_t rs1 = get_register(ptr_rs1); // a
@@ -18,8 +18,12 @@ void execute_i_type(uint32_t instr) {
         case 0x0: { // ADDI
             switch(opcode){
                 case 0x13: {
-                    rd = (uint32_t)((int32_t)rs1 + (int32_t)imm);
-                    printf("(ADDI): %u = %u + %u\n",rd,rs1,imm);
+                    int32_t sign_imm = (imm & 0x800) ? 
+                              (imm | 0xFFFFF000) : // Sign-extend if the sign bit is set
+                              (imm & 0xFFF);      // No sign-extension needed
+
+                    rd = (int32_t)(rs1 + sign_imm);
+                    printf("(ADDI): %X = %X + %d\n",rd,rs1,sign_imm);
                     break;
                 }
                 case 0x03: { // LB

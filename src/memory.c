@@ -1,3 +1,4 @@
+#include <string.h>
 #include "memory.h"
 #include "instructions.h"
 

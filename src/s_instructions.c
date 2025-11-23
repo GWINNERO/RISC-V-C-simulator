@@ -25,14 +25,17 @@ void execute_s_type(uint32_t instr) {
     switch (funct3) {
         case 0x0: { // Store byte (SB)
             sb(addr, (uint32_t)(value & 0xFF));
+            printf("(SB)\n");
             break;
         }
         case 0x1: { // Store half (SH)
             sh(addr, (uint32_t)(value & 0xFFFF));
+            printf("(SH)\n");
             break;
         }
         case 0x2: { // Store word (SW)
             sw(addr, value);
+            printf("(SW)\n");
             break;
         }
         default:

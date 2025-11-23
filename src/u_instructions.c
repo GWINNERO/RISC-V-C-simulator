@@ -22,7 +22,7 @@ void execute_u_type(uint32_t instr) {
         case 0x0:
             break;
         case 0b0110111: {
-            rd = imm;
+            rd = imm << 12;
             printf("(LUI): (rd)%u = (imm)%u\n", ptr_rd, rd);
             break;
             }
