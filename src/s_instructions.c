@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "instructions.h"
+#include "memory.h"
+
 
 /* ---------- S-type executor (fixed) ---------- */
 
@@ -22,15 +24,15 @@ void execute_s_type(uint32_t instr) {
 
     switch (funct3) {
         case 0x0: { // Store byte (SB)
-            store_byte(addr, (uint32_t)(value & 0xFF));
+            sb(addr, (uint32_t)(value & 0xFF));
             break;
         }
         case 0x1: { // Store half (SH)
-            store_half(addr, (uint32_t)(value & 0xFFFF));
+            sh(addr, (uint32_t)(value & 0xFFFF));
             break;
         }
         case 0x2: { // Store word (SW)
-            store_word(addr, value);
+            sw(addr, value);
             break;
         }
         default:
@@ -44,3 +46,5 @@ illegal:
     fprintf(stderr, "Illegal S-type encoding (funct3=0x%X)\n",
             (unsigned)funct3);
 }
+
+
