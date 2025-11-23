@@ -54,14 +54,6 @@ uint32_t get_register(uint32_t reg) {
     }
 }
 
-uint32_t get_memory(uint32_t address){
-    return memory[address/4];
-}
-
-void set_memory(uint32_t address, uint32_t value){
-    memory[address/4] = value;
-}
-
 bool execute_instruction(){
     printf("[%3u] ", pc);
     uint32_t instruction = get_memory(pc);

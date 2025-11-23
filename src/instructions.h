@@ -41,9 +41,9 @@ void bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm);
 
 // Utility functions for s-type instructions
 int32_t sign_extender(uint32_t value, int bits);
-void store_byte(uint32_t address, uint32_t value);
-void store_half(uint32_t address, uint32_t value);
-void store_word(uint32_t address, uint32_t value);
+void sb(uint32_t address, uint32_t value);
+void sh(uint32_t address, uint32_t value);
+void sw(uint32_t address, uint32_t value);
 
 
 #endif // INSTRUCTIONS_H
