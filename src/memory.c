@@ -38,7 +38,7 @@ uint32_t load_file(const char *filename, uint32_t memory[]) {
     return count;
 }
 
-void bin_dump_registers(const uint32_t register_address[], int REG_COUNT) {
+void bin_dump_registers(const uint32_t register_address[], int REG_COUNT, const char *input_filename) {
 
     // binary printing of registers to console
     for (uint32_t i = 0; i < REG_COUNT; i++) {
@@ -46,21 +46,57 @@ void bin_dump_registers(const uint32_t register_address[], int REG_COUNT) {
         printf("\n");
     }
 
-    // open results folder to write the registers into a .bin file
-    FILE *out = fopen("results/register_dump.bin", "wb");
+    // Extract file name WITHOUT folders and WITHOUT ".bin"
+    const char *base = strrchr(input_filename, '/');
+    if (!base) base = strrchr(input_filename, '\\');
+    if (!base) base = input_filename;
+    else base++; // skip slash
+
+    char clean_name[256];
+    strcpy(clean_name, base);
+
+    // remove .bin extension
+    char *dot = strrchr(clean_name, '.');
+    if (dot) *dot = '\0';
+
+    // Final output path
+    char output_path[300];
+    snprintf(output_path, sizeof(output_path),
+             "results/register_dump_%s.bin", clean_name);
+
+    // Create file
+    FILE *out = fopen(output_path, "wb");
     if (!out) {
-        printf("error cound not execute\n");
+        printf("Error: could not create %s\n", output_path);
         return;
     }
 
-    // write each register as a 32-bit value into .bin file
+    // Write registers
     for (uint32_t i = 0; i < REG_COUNT; i++) {
         fwrite(&register_address[i], sizeof(uint32_t), 1, out);
     }
 
     fclose(out);
-    printf("Register dump saved to results/register_dump.bin\n");
+    printf("Register dump saved to %s\n", output_path);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // sign extender
 int32_t sign_extender(uint32_t value, int bits) {

@@ -110,7 +110,8 @@ int main(int argc, char *argv[]) {
     }
 */
 
-    bin_dump_registers(x, REG_COUNT);
+    bin_dump_registers(x, REG_COUNT, argv[1]);
+
 
 
  /* Create the file */

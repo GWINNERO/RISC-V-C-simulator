@@ -13,7 +13,8 @@
 uint32_t load_file(const char *filename, uint32_t memory[]);
 
 // Dump registers to a binary file and print them in binary format to console
-void bin_dump_registers(const uint32_t register_address[], int REG_COUNT);
+void bin_dump_registers(const uint32_t register_address[], int REG_COUNT, const char *input_filename);
+
 
 extern uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
                                 // Stack memory start at 1 MB (262144)
