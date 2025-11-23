@@ -1,17 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "instructions.h"
-<<<<<<< HEAD
-=======
 #include "memory.h"
 
 
 /* ---------- S-type executor (fixed) ---------- */
->>>>>>> 927ac28d7ab441fbc824f54ae60cc3ae8d25018a
-
-/* ---------- S-type executor ---------- */
 void execute_s_type(uint32_t instr) {
-<<<<<<< HEAD
     const uint32_t rs1    = get_rs1(instr);
     const uint32_t rs2    = get_rs2(instr);
     const uint32_t funct3 = get_funct3(instr);
@@ -49,8 +43,6 @@ void execute_s_type(uint32_t instr) {
     /* S-type does NOT write to any register */
 }
 /*
-=======
->>>>>>> 927ac28d7ab441fbc824f54ae60cc3ae8d25018a
     const uint32_t rs1    = get_rs1(instr);
     const uint32_t rs2    = get_rs2(instr);
     const uint32_t funct3 = get_funct3(instr);
@@ -111,4 +103,4 @@ void sw(uint32_t addr, uint32_t value) {
     uint32_t index = addr / 4;
     memory[index] = value;
     printf("SW mem[%u] = 0x%08X\n", index, memory[index]);
-}
+}*/
