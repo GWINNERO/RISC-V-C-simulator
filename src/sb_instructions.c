@@ -17,7 +17,8 @@ void execute_sb_type(uint32_t instruction) {
     uint32_t rs2 = (instruction >> 20) & 0x1F;
     uint32_t funct3 = (instruction >> 12) & 0x7;
 
-    
+    printf("SB-type decode: funct3=%u imm=0x%08X rs1=%u rs2=%u\n", funct3, imm, rs1, rs2);
+
     switch (funct3) {
         case 0x0: beq(rs1, rs2, imm); break;
         case 0x1: bne(rs1, rs2, imm); break;
