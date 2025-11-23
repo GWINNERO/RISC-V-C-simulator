@@ -68,3 +68,4 @@ void sw(uint32_t addr, uint32_t value) {
     memory[index] = value;
     printf("SW mem[%u] = 0x%08X\n", index, memory[index]);
 }
+ 
