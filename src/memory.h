@@ -9,8 +9,17 @@
 
 // Load a .bin file with 32-bit instructions into memory[]
 // Returns: number of 32-bit instructions loaded, or (uint32_t)-1 (max value) if an error occurs
+
 uint32_t load_file(const char *filename, uint32_t memory[]);
 
+// Dump registers to a binary file and print them in binary format to console
 void bin_dump_registers(const uint32_t register_address[], int REG_COUNT);
+
+extern uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
+                                // Stack memory start at 1 MB (262144)
+
+uint32_t get_memory(uint32_t address);
+void set_memory(uint32_t address, uint32_t value);
+
 
 #endif // MEMORY_H

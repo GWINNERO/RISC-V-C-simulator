@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "instructions.h"
+#include "memory.h"
 
 /* ---------- I-type executor (fixed) ---------- */
 void execute_i_type(uint32_t instr) {

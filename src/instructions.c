@@ -139,6 +139,8 @@ inline uint32_t get_funct7(uint32_t inst){ return get_bits(inst, 31, 25); }
                 (unsigned)funct7, (unsigned)funct3);
 }*/
 /* ---------- S-type executor (fixed) ---------- */
+
+/*
 void execute_s_type(uint32_t instr) {
     const uint32_t ptr_rd = get_rd(instr);
     const uint32_t ptr_rs1 = get_rs1(instr);
@@ -154,6 +156,8 @@ void execute_s_type(uint32_t instr) {
     uint32_t rd = 0;
 
     switch (funct3) {
+
+*/
     /*
         case 0x0: { // Store byte
             M[rs1 + imm][0:7] = regs[rs2] & 0xFF;
@@ -166,6 +170,7 @@ void execute_s_type(uint32_t instr) {
             M[rs1 + imm][0:31] = regs[rs2];
             break;}
          */   
+        /*
         default:
             goto illegal;
     }
@@ -180,6 +185,8 @@ void execute_s_type(uint32_t instr) {
 
 }   
 
+*/
+/*
 void execute_b_type(uint32_t x){ 
     const uint32_t ptr_rd     = get_rd(x);
     const uint32_t ptr_rs1    = get_rs1(x);
@@ -240,6 +247,8 @@ void execute_b_type(uint32_t x){
 
 
 void execute_sb_type(uint32_t x){ (void)x; puts("SB-type stub"); }
+
+*/
 //void execute_u_type(uint32_t x){ (void)x; puts("U-type stub"); }
 //void execute_uj_type(uint32_t x){ (void)x; puts("UJ-type stub"); }
 
