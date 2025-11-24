@@ -16,7 +16,10 @@ void jal(uint32_t instruction){
 
     uint32_t return_address = get_pc();
     set_register(rd, return_address);
-    set_pc(get_pc() + imm);
+    // execute_instruction() pre-increments PC by 4 before dispatch.
+    // get_pc() therefore returns (instruction_address + 4).
+    // The JAL target should be instruction_address + imm, so subtract 4.
+    set_pc((get_pc() - 4) + (int32_t)imm);
 
     printf("(JAL) rd=x%u, imm=%d, return=0x%08X, new_pc=0x%08X\n",
        rd, (int32_t)imm, return_address, get_pc());

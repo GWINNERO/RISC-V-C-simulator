@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define MAX_MEMORY 0xF4240   // 1 MB / 4 bytes = 262144 instructions
+#define MAX_MEMORY 262144   // 1 MB / 4 bytes = 262144 words
 
 // Load a .bin file with 32-bit instructions into memory[]
 // Returns: number of 32-bit instructions loaded, or (uint32_t)-1 (max value) if an error occurs

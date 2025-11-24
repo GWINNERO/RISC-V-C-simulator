@@ -27,9 +27,10 @@ void execute_u_type(uint32_t instr) {
             break;
             }
         case 0b0010111: {
-            uint32_t pc = get_pc();
-            rd = imm + pc;
-            printf("(AUIPC) (x[%u])%u = %u(pc) + %u(imm)\n",ptr_rd, rd, pc, imm);
+            // AUIPC: rd = PC (instruction address) + (imm << 12)
+            uint32_t pc_instr = get_pc() - 4; // adjust for pre-incremented PC
+            rd = (imm << 12) + pc_instr;
+            printf("(AUIPC) x[%u]=0x%08X (pc=0x%08X imm=0x%X)\n", ptr_rd, rd, pc_instr, imm);
             break;
         }
         default: {

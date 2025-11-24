@@ -25,8 +25,8 @@ void execute_i_type(uint32_t instr) {
                     break;
                 }
                 case 0x03: { // LB
-                    // Calculate memory address
-                    uint32_t addr = rs1 + imm;
+                    // Calculate memory address (signed 12-bit immediate)
+                    uint32_t addr = rs1 + (uint32_t)sign_imm;
 
                     uint32_t b = read_byte(addr);
 
@@ -44,10 +44,16 @@ void execute_i_type(uint32_t instr) {
                     break;
                 }
                 case 0x67: {
-                    // jalr
-                    set_register(rd, get_pc());
-                    set_pc(rs1+imm);
-                    printf("(JALR) (rd)%u (rs1)%u (imm)%u\n",rd,rs1,imm);
+                    // JALR: write return address (PC+4) into destination register,
+                    // then set PC = (rs1 + imm) & ~1. Use ptr_rd (destination index).
+                    {
+                        int32_t offset = sign_imm;
+                        uint32_t target = (uint32_t)((int32_t)rs1 + offset) & ~1u;
+                        set_register(ptr_rd, get_pc());
+                        set_pc(target);
+                        printf("(JALR) rd=x%u rs1=x%u imm=%d new_pc=0x%08X\n",
+                               ptr_rd, ptr_rs1, offset, target);
+                    }
                     break;                                                     
                 }
                 default:
@@ -65,7 +71,7 @@ void execute_i_type(uint32_t instr) {
                       }
                 case 0x3: { // LH
                     // LH load half word
-                    uint32_t addr = rs1 + imm;
+                    uint32_t addr = rs1 + (uint32_t)sign_imm;
 
                     uint8_t b0 = read_byte(addr);
                     uint8_t b1 = read_byte(addr + 1);
@@ -94,7 +100,7 @@ void execute_i_type(uint32_t instr) {
                 }
                 case 0x3: {
                 // LW load word
-                    uint32_t addr = rs1 + imm;
+                    uint32_t addr = rs1 + (uint32_t)sign_imm;
 
                     uint8_t b0 = read_byte(addr);
                     uint8_t b1 = read_byte(addr + 1);
@@ -136,7 +142,7 @@ void execute_i_type(uint32_t instr) {
                 }
                 case 0x3: {
                     // LBU 
-                    uint32_t addr = rs1 + imm;
+                    uint32_t addr = rs1 + (uint32_t)sign_imm;
 
                     uint8_t b = read_byte(addr);
                     rd = b;
@@ -171,7 +177,7 @@ void execute_i_type(uint32_t instr) {
                  }
                 case 0x3: {
                     // LHU load half word unsigned
-                    uint32_t addr = rs1 + imm;
+                    uint32_t addr = rs1 + (uint32_t)sign_imm;
 
                     uint8_t b0 = read_byte(addr);
                     uint8_t b1 = read_byte(addr + 1);

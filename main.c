@@ -24,6 +24,8 @@ uint32_t x[REG_COUNT]; // Array holding 32 registers
 
 uint32_t imm = 0; // Global immediate value
 
+uint32_t instruction_count = 0; // Instruction execution counter
+#define MAX_INSTRUCTIONS 100000 // 100k instruction limit for debugging
 
 bool running = true;
                   
@@ -39,6 +41,12 @@ void set_register(uint32_t reg, uint32_t value) {
     if (reg == 0) {
         printf("Error: Register x[0] is read-only.\n");
     } else if (reg >= 1 && reg < REG_COUNT) {
+        if (reg == 1) {
+            printf("*** x[1] SET to 0x%08X (was 0x%08X)\n", value, x[1]);
+        }
+        if (reg == 6) {
+            printf("*** x[6] SET to 0x%08X (was 0x%08X)\n", value, x[6]);
+        }
         x[reg] = value;
     } else {
         printf("Error: Invalid register index %d.\n", reg);
@@ -55,7 +63,20 @@ uint32_t get_register(uint32_t reg) {
 }
 
 bool execute_instruction(){
-    printf("[0x%02X] ", pc);
+    // Check if exceeded instruction limit (prevents infinite loops)
+    if (instruction_count >= MAX_INSTRUCTIONS) {
+        printf("\nMaximum instruction limit reached. Halting.\n");
+        return false;
+    }
+
+    // Check if PC exceeds max memory (MAX_MEMORY is in words, PC is in bytes)
+    if (pc >= MAX_MEMORY) {
+        printf("\nProgram counter exceeded maximum memory. Halting.\n");
+        return false;
+    }
+
+    instruction_count++;
+    printf("[0x%04X] ", pc);
     uint32_t instruction = get_memory(pc);
     pc+=4; //increase pc with 4
 
