@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define MAX_MEMORY 262144   // 1 MB / 4 bytes = 262144 instructions
+#define MAX_MEMORY 0xF4240   // 1 MB / 4 bytes = 262144 instructions
 
 // Load a .bin file with 32-bit instructions into memory[]
 // Returns: number of 32-bit instructions loaded, or (uint32_t)-1 (max value) if an error occurs
@@ -18,6 +18,8 @@ void bin_dump_registers(const uint32_t register_address[], int REG_COUNT, const 
 
 extern uint32_t memory[MAX_MEMORY];    // Instruction memory start at 0
                                 // Stack memory start at 1 MB (262144)
+extern int memory_full;
+
 
 uint32_t get_memory(uint32_t address);
 void set_memory(uint32_t address, uint32_t value);

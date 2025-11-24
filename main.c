@@ -95,10 +95,14 @@ int main(int argc, char *argv[]) {
 
 
 
-    
-    while(running){
-        running = execute_instruction();
+ while (running) {
+    if (memory_full) {
+        printf("MAX_MEMORY reached, stopping simulation.\n");
+        break;
     }
+
+    running = execute_instruction();
+}
 
 
 
